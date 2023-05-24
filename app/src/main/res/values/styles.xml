@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ViewCellStyle">
+        <item name="android:background">@color/cellDefaultColor</item>
+        <item name="android:layout_width">40pt</item>
+        <item name="android:layout_height">40pt</item>
+        <item name="android:layout_marginLeft">2pt</item>
+        <item name="android:layout_marginRight">2pt</item>
+        <item name="android:layout_marginTop">2pt</item>
+        <item name="android:layout_marginBottom">2pt</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">15pt</item>
+
+
+
+
+    </style>
+
+
+
+</resources>
