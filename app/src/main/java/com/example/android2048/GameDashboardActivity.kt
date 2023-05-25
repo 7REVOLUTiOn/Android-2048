@@ -16,15 +16,12 @@ class GameDashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
 
-
-
-    //private variables
     private val colorMapper: HashMap<Int, String> = HashMap();
     private var filledCell = ArrayList<Int>()
     private var currentState = Array(4) {Array(4) {0} }
     private var updatedState = Array(4) {Array(4) {0} }
 
-    //Enum class for handling swipe direction
+
     enum class SwipeDirection {
         Top,
         Bottom,
@@ -39,7 +36,7 @@ class GameDashboardActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        //mapping color for cells based on the value
+
         colorMapper[0] = "#CDC1B4"
         colorMapper[3] = "#eee4da"
         colorMapper[6] = "#ede0c7"
@@ -58,10 +55,11 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * Adds swipe gesture for the view
+     * Добавляет жест смахивания для просмотра
      *
-     * @param view: View for which the gesture is to be added
+     * @param view: вид, для которого должен быть добавлен жест
      */
+
     fun addSwipeGesture(view: View) {
         view.isClickable = true
         view.setOnTouchListener(object : OnSwipeTouchListener(this@GameDashboardActivity) {
@@ -90,19 +88,19 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * When the gesture recognizer recognizes any swipe events [left,right, top, bottom]
-     * It will call the method swipeaction
-     * @param action: SwipeDirection enum will be passed
+     * Когда распознаватель жестов распознает любые события свайпа [влево, вправо, сверху, снизу]
+     * * Это вызовет метод swipe action
+     * @* @действие параметра: будет передано перечисление направления свайпа
      */
     fun swipeAction(action: SwipeDirection) {
-        // Step 1: When any swipe action happens
-        // save the current state into two dimensional array
+        // Шаг 1: Когда происходит какое-либо действие смахивания
+        // сохранить текущее состояние в двумерном массиве
         saveCurrentStateTo2DArray()
 
-        //Step 2:copy current state to final state
+        //Шаг 2: скопируйте текущее состояние в конечное
         updatedState = currentState
 
-        //Step 3: Based on swipe direction perform the specific action
+        //Шаг 3: В зависимости от направления свайпа выполните конкретное действие
         when(action) {
             SwipeDirection.Top -> {
                 performActionTop()
@@ -121,24 +119,24 @@ class GameDashboardActivity : AppCompatActivity() {
             }
         }
 
-        //Step 4: Update the filledCell arraylist based on the swipe action
+        //Шаг 4: Обновите список заполненных ячеек arraylist на основе действия смахивания
         updateFreeCells()
 
         //Step 5: Update the current 2D array to updatedState
         updatedState = currentState
 
-        //Step 6: After performing swipe action update the game UI
+        //Шаг 6: После выполнения свайпа обновите пользовательский интерфейс игры
         loadFromUpdatedStateToUI()
 
-        //Step 7: Update the color code of the cell based on the value
+        //Шаг 7: Обновите цветовой код ячейки на основе значения
         updateUIaccordingToNumber()
 
-        //Step 8: Create a new value [2,4] add place it in the new available position
+        //Шаг 8: Создайте новое значение [2,4], добавьте и поместите его в новое доступное положение
         generateNewRandomNumberAfterSwipeAction()
     }
 
     /**
-     * Updates the color code of the cell based on the value
+     * Обновляет цветовой код ячейки на основе значения
      */
     fun updateUIaccordingToNumber() {
         //First row
@@ -167,10 +165,10 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * performActionTop method will be called when the user swipes to Top
+     * * метод perform Action Top будет вызван, когда пользователь проведет пальцем по верхнему
      */
     fun performActionTop() {
-        //Step 1: check if consecutive rows can be added from bottom to Top
+        //Шаг 1: проверьте, можно ли добавлять последовательные строки снизу вверх
         for(row:Int in 1 until currentState.size) {
             for(col: Int in currentState[row].indices) {
                 if(currentState[row-1][col] == currentState[row][col]) {
@@ -181,7 +179,7 @@ class GameDashboardActivity : AppCompatActivity() {
             }
         }
 
-        //Step 2: move the position from bottom to top
+        //Шаг 2: переместите позицию снизу вверх
         for(row in 3 downTo 1) {
             for(col: Int in currentState[row].indices) {
 
@@ -192,14 +190,14 @@ class GameDashboardActivity : AppCompatActivity() {
                 }
             }
         }
-        //TODO: Need to use sort login to move the positions from bottom to top
+
     }
 
     /**
-     * performActionTop method will be called when the user swipes to Bottom
+     * * метод perform Action Top будет вызван, когда пользователь проведет пальцем вниз
      */
     fun performActionBottom() {
-        //Step 1: check if consecutive rows can be added from top to bottom
+        //Шаг 1: проверьте, можно ли добавлять последовательные строки сверху вниз
         for(row:Int in currentState.size-1 downTo 1) {
             for(col: Int in currentState[row].indices) {
                 if(currentState[row-1][col] == currentState[row][col]) {
@@ -210,12 +208,12 @@ class GameDashboardActivity : AppCompatActivity() {
             }
         }
 
-        //Step 2: Move the position from bottom to top
+        //Шаг 2: Переместите позицию снизу вверх
         for(row in 1 until currentState.size) {
             for(col: Int in currentState[row].indices) {
 
                 if(currentState[row][col] == 0) {
-                    //add these tow number together and replace the currentState to 0
+                    //Шаг 2: Переместите позицию снизу вверх
                     currentState[row][col] = currentState[row-1][col]
                     currentState[row-1][col] = 0
                 }
@@ -224,27 +222,27 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * performActionTop method will be called when the user swipes to Left
+     * * метод perform Action Top будет вызван, когда пользователь проведет пальцем влево
      */
     fun performActionLeft() {
-        //Step 1: check if consecutive columns can be added from right to left
+        //Шаг 1: проверьте, можно ли добавлять последовательные столбцы справа налево
 
         for(col:Int in 1 until currentState.size) {
             for(row: Int in currentState[col].indices) {
                 if(currentState[row][col-1] == currentState[row][col]) {
-                    //add these tow number together and replace the currentState to 0
+                    //сложите эти два числа вместе и замените текущее состояние на 0
                     currentState[row][col-1] += currentState[row][col]
                     currentState[row][col] = 0
                 }
             }
         }
 
-        //Step 2: move the position from right to left
+        //Шаг 2: переместите позицию справа налево
         for(col in 3 downTo 1) {
             for(row: Int in currentState[col].indices) {
 
                 if(currentState[row][col-1] == 0) {
-                    //add these tow number together and replace the currentState to 0
+                    //сложите эти два числа вместе и замените текущее состояние на 0
                     currentState[row][col-1] = currentState[row][col]
                     currentState[row][col] = 0
                 }
@@ -254,27 +252,27 @@ class GameDashboardActivity : AppCompatActivity() {
 
 
     /**
-     * performActionTop method will be called when the user swipes to Right
+     * * метод perform Action Top будет вызван, когда пользователь проведет пальцем вправо
      */
     fun performActionRight() {
-        //Step 1: check if consecutive columns can be added from left to right
+        //Шаг 1: проверьте, можно ли добавлять последовательные столбцы слева направо
 
         for(col:Int in currentState.size-1 downTo 1) {
             for(row: Int in currentState[col].indices) {
                 if(currentState[row][col-1] == currentState[row][col]) {
-                    //add these tow number together and replace the currentState to 0
+                    //сложите эти два числа вместе и замените текущее состояние на 0
                     currentState[row][col] += currentState[row][col-1]
                     currentState[row][col-1] = 0
                 }
             }
         }
 
-        //Step 2: move the position from left to right
+        //Шаг 2: переместите позицию слева направо
         for(col in 1 until currentState.size) {
             for(row: Int in currentState[col].indices) {
 
                 if(currentState[row][col] == 0) {
-                    //add these tow number together and replace the currentState to 0
+                    //сложите эти два числа вместе и замените текущее состояние на 0
                     currentState[row][col] = currentState[row][col-1]
                     currentState[row][col-1] = 0
                 }
@@ -283,8 +281,8 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * updateFreeCells method updates the cells after any swipe action
-     * so that the new values will be created in the available space
+     * * метод обновления свободных ячеек обновляет ячейки после любого действия смахивания
+     * таким образом, новые значения будут созданы в доступном пространстве
      */
     fun updateFreeCells() {
         filledCell.clear()
@@ -310,29 +308,29 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * saveCurrentStateTo2DArray: This method will save the current game cell in to 2D array
-     * which will be used later for calculations
+     * * сохранить текущее состояние в 2D массив: Этот метод сохранит текущую игровую ячейку в 2D массив
+     * который будет использоваться позже для расчетов
      */
     fun saveCurrentStateTo2DArray() {
-        //FirstRow
+        //Первый ряд
         currentState[0][0] = binding.tv1.text.toString().toIntWithNullHandle();
         currentState[0][1] = binding.tv2.text.toString().toIntWithNullHandle();
         currentState[0][2] = binding.tv3.text.toString().toIntWithNullHandle();
         currentState[0][3] = binding.tv4.text.toString().toIntWithNullHandle();
 
-        //SecondRow
+        //Второй ряд
         currentState[1][0] = binding.tv5.text.toString().toIntWithNullHandle();
         currentState[1][1] = binding.tv6.text.toString().toIntWithNullHandle();
         currentState[1][2] = binding.tv7.text.toString().toIntWithNullHandle();
         currentState[1][3] = binding.tv8.text.toString().toIntWithNullHandle();
 
-        //ThirdRow
+        //Третий  ряд
         currentState[2][0] = binding.tv9.text.toString().toIntWithNullHandle();
         currentState[2][1] = binding.tv10.text.toString().toIntWithNullHandle();
         currentState[2][2] = binding.tv11.text.toString().toIntWithNullHandle();
         currentState[2][3] = binding.tv12.text.toString().toIntWithNullHandle();
 
-        //FourthRow
+        //Четвертый ряд
         currentState[3][0] = binding.tv13.text.toString().toIntWithNullHandle();
         currentState[3][1] = binding.tv14.text.toString().toIntWithNullHandle();
         currentState[3][2] = binding.tv15.text.toString().toIntWithNullHandle();
@@ -340,28 +338,28 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * loadFromUpdatedStateToUI: This method will load the updated results to UI
+     * * загрузка из обновленного состояния в пользовательский интерфейс: этот метод загрузит обновленные результаты в пользовательский интерфейс
      */
     fun loadFromUpdatedStateToUI() {
-        //FirstRow
+        //Первый ряд
         binding.tv1.text = updatedState[0][0].toStringWithZeroHandle()
         binding.tv2.text = updatedState[0][1].toStringWithZeroHandle()
         binding.tv3.text = updatedState[0][2].toStringWithZeroHandle()
         binding.tv4.text = updatedState[0][3].toStringWithZeroHandle()
 
-        //SecondRow
+        //Второй ряд
         binding.tv5.text = updatedState[1][0].toStringWithZeroHandle()
         binding.tv6.text = updatedState[1][1].toStringWithZeroHandle()
         binding.tv7.text = updatedState[1][2].toStringWithZeroHandle()
         binding.tv8.text = updatedState[1][3].toStringWithZeroHandle()
 
-        //ThirdRow
+        //Третий ряд
         binding.tv9.text = updatedState[2][0].toStringWithZeroHandle()
         binding.tv10.text = updatedState[2][1].toStringWithZeroHandle()
         binding.tv11.text = updatedState[2][2].toStringWithZeroHandle()
         binding.tv12.text = updatedState[2][3].toStringWithZeroHandle()
 
-        //FourthRow
+        //Чертвертый ряд
         binding.tv13.text = updatedState[3][0].toStringWithZeroHandle()
         binding.tv14.text = updatedState[3][1].toStringWithZeroHandle()
         binding.tv15.text = updatedState[3][2].toStringWithZeroHandle()
@@ -369,8 +367,8 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * generateNewRandomNumberAfterSwipeAction: This method will generate a new random value [2,4]
-     * in the available cell using random function
+     * * сгенерировать новое случайное число после свайпа: Этот метод сгенерирует новое случайное значение [2,4]
+     * в доступной ячейке с помощью случайной функции
      */
     fun generateNewRandomNumberAfterSwipeAction() {
         var emptyCell = ArrayList<Int>()
@@ -414,8 +412,8 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * restartGame: WHen the user presses New Game button this method will be called
-     * This method will reset the game to New state and resets the color
+     * * перезапустить игру: когда пользователь нажмет кнопку "Создать игру", этот метод будет вызван
+     * Этот метод вернет игру в новое состояние и сбросит цвет
      */
     fun restartGame() {
         filledCell.clear()
@@ -444,20 +442,20 @@ class GameDashboardActivity : AppCompatActivity() {
             tvSelected?.text = ""
             tvSelected?.setBackgroundResource(R.color.cellDefaultColor)
         }
-        //After reseting: play first action : place 2' in two places randomly
+        //После сброса: воспроизведите первое действие: поместите 2' в двух местах случайным образом
         playFirstMove()
     }
 
     /**
-     * In the 2048 game, 2's appear 90% of the time; 4's appear 10% of the time
+     * В игре 2048 года двойки появляются в 90% случаев; четверки появляются в 10% случаев
      */
     fun generateCellRandomNumber(): Int {
         return if (Math.random() < 0.9) 3 else 6
     }
 
     /**
-     * playFirstMove: This method will be called during game beginning and after pressing New Game button
-     * Initially it will place two number [2 or 4] randomly in the available space
+     * * сделать первый ход: Этот метод будет вызван в начале игры и после нажатия кнопки "Новая игра".
+     * Первоначально он случайным образом разместит два числа [2 или 4] в доступном пространстве
      */
     fun playFirstMove() {
         var emptyCell = ArrayList<Int>()
@@ -520,10 +518,10 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * playGame: method will be called when the user performs any action, swipe or game reset
-     * @param cellId: Position where to add the value, Ex: 10
-     * @param tvSelected: text view reference to value and colour background to textview
-     * @param value: Value can be [2 or 4] Ex: 2
+     * PlayGame: метод будет вызван, когда пользователь выполнит какое-либо действие, свайп или сброс игры
+     * @param CellID: Позиция, в которую нужно добавить значение, например: 10
+     * @* @выбран параметр tv: ссылка на текстовое представление для значения и цвет фона для textview
+     * @значение параметра: Значение может быть [2 или 4], например: 2
      */
     fun playGame(cellId: Int, tvSelected: TextView, value: Int) {
         filledCell.add(cellId)
@@ -532,7 +530,7 @@ class GameDashboardActivity : AppCompatActivity() {
     }
 
     /**
-     * launchNewGame: This method is called from Onclick event of the New Game button
+     * * запустить новую игру: Этот метод вызывается из события Onclick кнопки New Game
      */
     fun launchNewGame(view: android.view.View) {
         restartGame()
@@ -540,8 +538,8 @@ class GameDashboardActivity : AppCompatActivity() {
 }
 
 /**
- * This String extension is used to convert String to Int
- * If string is empty [""] then it will return 0
+ * Это расширение строки используется для преобразования String в Int
+ * Если строка пуста [""], то она вернет 0
  */
 fun String.toIntWithNullHandle(): Int {
     if(this.contentEquals("")) {
@@ -551,8 +549,8 @@ fun String.toIntWithNullHandle(): Int {
 }
 
 /**
- * This Integer extension is used to convert Integer to String
- * If Integer is 0 then it will return empty string [""]
+ * Это целочисленное расширение используется для преобразования целого числа в строку
+ * Если целое число равно 0, то будет возвращена пустая строка [""]
  */
 fun Int.toStringWithZeroHandle(): String {
     if(this == 0) {
